@@ -1,12 +1,14 @@
+
 import { useState } from "react"
-import { GptMessage, MyMessage, TextMessageBox, TextMessageBoxFile, TextMessageBoxSelect, TypingLoader } from "../../components"
+import { GptMessage, MyMessage, TextMessageBox, TypingLoader } from "../components";
+
 
 interface Message {
   text: string;
   isGpt: boolean;
 }
 
-export const OrthographyPage = () => {
+export const ChatTemplate = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -51,14 +53,6 @@ export const OrthographyPage = () => {
         placeholder="Escribe aquí lo que deseas"
         disableCorrections={ true }
       />
-      {/* <TextMessageBoxFile
-        onSendMessage={handlePost}
-        placeholder="Escribe aquí lo que deseas"
-      /> */}
-      {/* <TextMessageBoxSelect
-        onSendMessage={ console.log }
-        options={[{ id: '1', text: 'Hola' }, { id: '2', text: 'Test'}]}
-      /> */}
     </div>
   )
 }
