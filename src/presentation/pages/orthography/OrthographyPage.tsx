@@ -31,7 +31,6 @@ export const OrthographyPage = () => {
       }]);
     }
     setIsLoading(false);
-    // TODO: Añadir el mensaje de isGPT en true
 
   }
 
