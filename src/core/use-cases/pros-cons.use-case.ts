@@ -1,6 +1,6 @@
 import type { ProConsResponse } from "../../interfaces";
 
-export const proConsUseCase = async(prompt: string) => {
+export const prosConsUseCase = async(prompt: string) => {
     try {
         const resp = await fetch(`${import.meta.env.VITE_GPT_API}/pro-cons-discusser`, {
             method: 'POST',

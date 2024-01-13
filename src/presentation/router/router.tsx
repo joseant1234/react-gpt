@@ -1,5 +1,5 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import { AssistantPage, AudioToTextPage, ImageGenerationPage, ImageTunningPage, OrthographyPage, ProsConsPage, ProsConsStreamPage, TextToAudioPage, TranslatePage } from "../pages";
+import { AssistantPage, AudioToTextPage, ImageGenerationPage, ImageTunningPage, OrthographyPage, ProsConsPage, ProsConsStreamInitialPage, ProsConsStreamPage, TextToAudioPage, TranslatePage } from "../pages";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 
 export const menuRoutes = [
@@ -16,6 +16,13 @@ export const menuRoutes = [
       title: "Pros & Cons",
       description: "Comparar pros y contras",
       component: <ProsConsPage />
+    },
+    {
+      to: "/pros-cons-stream-initial",
+      icon: "fa-solid fa-water",
+      title: "Como stream - inicial",
+      description: "Con stream de mensajes sin funcion generadora",
+      component: <ProsConsStreamInitialPage />
     },
     {
       to: "/pros-cons-stream",

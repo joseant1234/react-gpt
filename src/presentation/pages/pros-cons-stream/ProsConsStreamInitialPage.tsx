@@ -1,7 +1,7 @@
 
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { GptMessage, MyMessage, TextMessageBox, TypingLoader } from "../../components";
-import { prosConsStreamGeneratorUseCase, prosConsStreamUseCase } from "../../../core/use-cases";
+import { prosConsStreamUseCase } from "../../../core/use-cases";
 
 
 interface Message {
@@ -9,36 +9,34 @@ interface Message {
   isGpt: boolean;
 }
 
-export const ProsConsStreamPage = () => {
-  const abortController = useRef(new AbortController());
-  // ref porque no se necesita renderizar nada si 'esta corriendo' (isRunning)
-  const isRunning = useRef(false);
+export const ProsConsStreamInitialPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const handlePost = async(text: string) => {
-    if (isRunning.current) {
-      // al dar un nuevo 'enviar' se aborta el anterior stream con .abort() si esta corriendo
-      abortController.current.abort();
-      // se tiene que crear uno nuevo, sino se cancelaría el nuevo stream (la nueva comparación) que se va a realizar
-      abortController.current = new AbortController();
-    }
-
     setIsLoading(true);
-    isRunning.current = true;
     setMessages((prev) => [...prev, { text, isGpt :false }]);
-    const stream = prosConsStreamGeneratorUseCase(text, abortController.current.signal);
+    // sin la funcion generadora
+    const reader = await prosConsStreamUseCase(text);
     setIsLoading(false);
-    setMessages((messages) => [...messages, { text: '', isGpt: true }]);
-    for await (const text of stream) {
+    if (!reader) return alert('No se pudo generar el reader');
+    const decoder = new TextDecoder();
+    let message = '';
+    setMessages((messages) => [...messages, { text: message, isGpt: true }]);
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      const decorderChunk = decoder.decode(value, { stream: true });
+      message += decorderChunk;
       setMessages((messages) => {
         const newMessages = [...messages];
-        newMessages[newMessages.length - 1 ].text = text;
+        //  newMessages[newMessages.length - 1 ], al ultimo mensaje se pone le mensaje recibido por el stream y concatenado con message += decoderChunk
+        newMessages[newMessages.length - 1 ].text = message;
         return newMessages;
       });
     }
-    isRunning.current = false;
+
   }
 
   return (
